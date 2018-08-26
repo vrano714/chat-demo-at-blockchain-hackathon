@@ -23,32 +23,76 @@ function add_realtime_message(data){
         '<div></div>',
         {
             id: data.id,
-            "class": "message_holder",
-            "onclick": "send_like(" + data.id + ");"
+            "class": ".message__list",
+            "onclick": "send_like('" + data.id + "');"
+        }
+    );
+    var div_to_add2 = $(
+        '<div></div>',
+        {
+            "class": ".message__item .message__item--bot"
         }
     );
     var name = $(
-        '<div>' + data.name + '</div>',
+        '<span>' + data.name + ": " + '</span>',
         {
-            "class": "message_name"
+            "class": "message_name message message--bot"
         }
     );
     var content = $(
-        '<div>' + data.content + '</div>',
+        '<span>' + data.content + '</span>',
         {
-            "class": "message_content"
+            "class": "message_content message message--bot"
         }
     );
 
-    name.appendTo(div_to_add);
-    content.appendTo(div_to_add);
+    name.appendTo(div_to_add2);
+    content.appendTo(div_to_add2);
+    div_to_add2.appendTo(div_to_add);
     div_to_add.appendTo($("#real_time"));
-
-    // TODO: Write this function
 }
 
 function add_chain_message(data){
     // TODO: Write this function
+    console.log("chain message!: ");
+    console.log(data);
+
+    var div_to_add = $(
+        '<div></div>',
+        {
+            "class": ".message__list",
+        }
+    );
+    var div_to_add2 = $(
+        '<div></div>',
+        {
+            "class": ".message__item .message__item--bot"
+        }
+    );
+    var name = $(
+        '<span>' + data.transaction.name + ": " + '</span>',
+        {
+            "class": "message_name message message--bot"
+        }
+    );
+    var content = $(
+        '<span>' + data.transaction.content + '</span><br/>',
+        {
+            "class": "message_content message message--bot"
+        }
+    );
+    var phash = $(
+        '<span>' + data.previous_hash + '</span>',
+        {
+            "class": "message_content message message--bot phash"
+        }
+    );
+
+    name.appendTo(div_to_add2);
+    content.appendTo(div_to_add2);
+    phash.appendTo(div_to_add2);
+    div_to_add2.appendTo(div_to_add);
+    div_to_add.appendTo($("#chain"));
 }
 
 function update_like(data){
@@ -82,18 +126,19 @@ function send(status, data){
 }
 
 function send_like(op_id){
-    if ($("#" + op_id).attr("clicked") == "true"){
-        alert("you already liked this message");
-        return;
-    }
+    // if ($("#" + op_id).attr("clicked") == "true"){
+    //     alert("you already liked this message");
+    //     return;
+    // }
+    console.log(op_id);
     var status = "like";
     var data = {
-        "id": $("#" + op_id).attr("clicked")
+        "id": op_id
     };
     console.log(data);
     send(status, data);
 
-    $("#" + op_id).attr("clicked", "true");
+    // $("#" + op_id).attr("clicked", "true");
 }
 
 function send_new_message(){
