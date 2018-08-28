@@ -1,36 +1,37 @@
-<!DOCTYPE html>                                                                                                                                          
+<!DOCTYPE html>
 <html>
 <head>
   <title>Chain Chat</title>
-
+  
   <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
-
+  
   <link rel="stylesheet" href="{{ static_url("style.css") }}"/>
   <script
-      src="https://code.jquery.com/jquery-3.3.1.js"
-      integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
-      crossorigin="anonymous"
+  src="{{ static_url("jquery-3.3.1.min.js") }}"
   >
-  </script>
-  <script type="text/javascript">
-    server_location = "{{bind_ip_port}}";
-  </script>
+</script>
+<script type="text/javascript">
+  server_location = "{{bind_ip_port}}";
+</script>
 
-  <script src="{{ static_url("chat.js")}}"></script>
+<script src="{{ static_url("chat.js")}}"></script>
 </head>
 <body>
   <div id="header"></div>
   <div class="container">
-      <div id="real_time" class="screen">
-      </div>
-      <div id="chain" class="screen">
-      </div>
-  </div>
-    <div id="msgbox">
-      <textarea name="op_name"></textarea>
-      <textarea name="op_content"></textarea>
-      <button id="send", onclick="send_new_message();">Send</button>
+    <div id="real_time" class="screen">
+      <h2>Real Time</h2>
     </div>
+    <div id="chain" class="screen">
+      <h2>Chain</h2>
+    </div>
+  </div>
+  <div id="msgbox">
+    <span>name: </span>
+    <input name="op_name" id="name_field" class="user_input"/>
+    <span>opinion: </span>
+    <input name="op_content" id="content_field" class="user_input"/>
+    <button id="send", onclick="send_new_message();">Send</button>
+  </div>
 </body>
 </html>
-

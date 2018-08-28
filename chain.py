@@ -1,9 +1,10 @@
+import collections
 import hashlib
 import json
 
 class Manager:
     def __init__(self):
-        self.messages = {}
+        self.messages = collections.OrderedDict()#{}
         self.chain = []
 
         # chainの最初のブロックを作る
@@ -19,10 +20,10 @@ class Manager:
         )
 
     def process(self, message):
-        print("Incoming message: ", message)
         ret = []
         data = message["data"]
         opinion_id = message["data"]["id"]
+
         if message["status"] == "new":
             self.messages[opinion_id] = data
             ret.append(
@@ -32,8 +33,6 @@ class Manager:
                 }
             )
         elif message["status"] == "like":
-            print("like received")
-            # self.messagesの中からlike対象を探してlikeを+1する
             self.messages[opinion_id]["like"] += 1
             ret.append(
                 {
@@ -41,9 +40,7 @@ class Manager:
                     "id": opinion_id
                 }
             )
-            # そのメッセージのlikeがある値を超えたらハッシュをつけてchainに入れる
-            if self.messages[opinion_id]["like"] >= 4:
-                # chain化
+            if self.messages[opinion_id]["like"] == 4:
                 self.chain.append(
                     self.make_block(self.messages[opinion_id])
                 )
@@ -59,13 +56,11 @@ class Manager:
         return ret
 
     def make_block(self, message):
-        # 暗号生成器
         m = hashlib.sha256()
         
         m.update(
             json.dumps(self.chain[-1]).encode("utf-8")
         )
-        # m.update(message["id"].encode("utf-8"))
 
         blk = {
             "previous_hash": m.hexdigest(),
@@ -75,7 +70,25 @@ class Manager:
         return blk
 
     def get_all_messages(self):
-        pass
+        ret = []
+        for k in self.messages.keys():
+            ret.append(
+                {
+                    "status": "logged_realtime_message",
+                    "data": self.messages[k]
+                }
+            )
+
+        return ret
 
     def get_all_chains(self):
-        pass
+        ret = []
+        for c in self.chain[1:]:
+            ret.append(
+                {
+                    "status": "new_chain_message",
+                    "data": c
+                }
+            )
+
+        return ret
